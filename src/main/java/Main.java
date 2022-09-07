@@ -10,7 +10,7 @@ public class Main {
 
     public static void main(String[] args) throws IOException {
         VideoProcessor processor = new VideoProcessor("./ffmpeg/ffmpeg.exe", "./ffmpeg/ffprobe.exe");
-        processor.videoToFrames("./input.gif");
+        processor.videoToFrames("./input.mp4");
 
         System.out.print("[sofvfx] Processing frames...");
         File directory = new File("./frames/");
