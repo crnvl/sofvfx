@@ -39,12 +39,12 @@ public class Main {
         graphics.fillRect(0, 0, height * scaling, width * scaling);
 
         graphics.setColor(Color.WHITE);
-        graphics.setFont(new Font("", Font.PLAIN, 8 * scaling));
+        graphics.setFont(new Font("Cascadia Code", Font.PLAIN, 8 * scaling));
         for (int i = 0; i < lines.size(); i++) {
             graphics.drawString(lines.get(i), 0, (8 * scaling) * i);
         }
         frameCount++;
-        ImageIO.write(textImage, "png", new File("./processed/" + ("000".substring(0, (3 - Integer.toString(frameCount).length())) + frameCount) + ".png"));
+        ImageIO.write(textImage, "png", new File("./processed/" + ("00000".substring(0, (5 - Integer.toString(frameCount).length())) + frameCount) + ".png"));
     }
 
 }

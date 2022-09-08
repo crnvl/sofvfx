@@ -25,7 +25,7 @@ public class VideoProcessor {
         System.out.print("[sofvfx] Splitting video into frames...");
         FFmpegBuilder builder = new FFmpegBuilder()
                 .setInput(input)
-                .addOutput("./frames/frame%03d.png")
+                .addOutput("./frames/frame%05d.png")
                 .setVideoFrameRate(FFmpeg.FPS_23_976)
                 .done();
 
@@ -37,7 +37,7 @@ public class VideoProcessor {
     public void framesToVideo(String output) throws IOException {
         System.out.print("[sofvfx] Merging frames into video...");
         FFmpegBuilder builder = new FFmpegBuilder()
-                .setInput("./processed/%03d.png")
+                .setInput("./processed/%05d.png")
                 .addOutput(output)
                 .setVideoFrameRate(FFmpeg.FPS_23_976)
                 .done();
