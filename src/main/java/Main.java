@@ -27,7 +27,7 @@ public class Main {
         }
         System.out.print("[sofvfx] Finished processing frames.\r\n");
 
-        processor.framesToVideo("./output.gif");
+        processor.framesToVideo("./output.avi");
     }
 
     public static void textToImage(ArrayList<String> lines, int height, int width) throws IOException {
@@ -39,7 +39,7 @@ public class Main {
         graphics.fillRect(0, 0, height * scaling, width * scaling);
 
         graphics.setColor(Color.WHITE);
-        graphics.setFont(new Font("Cascadia Code", Font.PLAIN, 8 * scaling));
+        graphics.setFont(new Font("Consolas", Font.PLAIN, 8 * scaling));
         for (int i = 0; i < lines.size(); i++) {
             graphics.drawString(lines.get(i), 0, (8 * scaling) * i);
         }
