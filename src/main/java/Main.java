@@ -10,13 +10,13 @@ public class Main {
 
     public static void main(String[] args) throws IOException {
         VideoProcessor processor = new VideoProcessor("./ffmpeg/ffmpeg.exe", "./ffmpeg/ffprobe.exe");
-        processor.videoToFrames("./input.mp4");
+        processor.videoToFrames("./input.gif");
 
         System.out.print("[sofvfx] Processing frames...");
         File directory = new File("./frames/");
         File[] frames = directory.listFiles();
 
-        assert frames != null;
+/*        assert frames != null;
         for (File frame : frames) {
             if (frame.isFile()) {
                 File file = new File(frame.getPath());
@@ -24,10 +24,19 @@ public class Main {
                 System.out.print("[sofvfx] Processing " + file.getName() + "\r");
                 textToImage(EffectsProcessor.frameToText(img, 6), img.getHeight(), img.getWidth());
             }
+        }*/
+        for (File frame : frames) {
+            if (frame.isFile()) {
+                File file = new File(frame.getPath());
+                BufferedImage img = ImageIO.read(file);
+                System.out.print("[sofvfx] Processing " + file.getName() + "\r");
+                EffectsProcessor.coloredFrames(img, 4, frameCount);
+                frameCount++;
+            }
         }
         System.out.print("[sofvfx] Finished processing frames.\r\n");
 
-        processor.framesToVideo("./output.avi");
+        processor.framesToVideo("./output.gif");
     }
 
     public static void textToImage(ArrayList<String> lines, int height, int width) throws IOException {
@@ -39,7 +48,7 @@ public class Main {
         graphics.fillRect(0, 0, height * scaling, width * scaling);
 
         graphics.setColor(Color.WHITE);
-        graphics.setFont(new Font("Consolas", Font.PLAIN, 8 * scaling));
+        graphics.setFont(new Font("Consolas", Font.BOLD, 8 * scaling));
         for (int i = 0; i < lines.size(); i++) {
             graphics.drawString(lines.get(i), 0, (8 * scaling) * i);
         }
