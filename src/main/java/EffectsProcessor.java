@@ -54,10 +54,10 @@ public class EffectsProcessor {
                 int green = (rgb & 0x0000ff00) >> 8;
                 int blue = rgb & 0x000000ff;
 
-                if(colored)
+                if (colored)
                     g.setColor(new Color(red, green, blue));
                 else
-                    g.setColor(fromShade(Character.toString(colorShades.toCharArray()[((red + green + blue) / 3) / colorShades.length() % colorShades.length()]), (red + green + blue) / 3));
+                    g.setColor(Color.WHITE);
                 g.drawString(Character.toString(shades.toCharArray()[((red + green + blue) / 3) / shades.length() % shades.length()]), x + reduce, y + reduce);
             }
         }
