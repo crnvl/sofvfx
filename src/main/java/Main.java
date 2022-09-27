@@ -30,7 +30,12 @@ public class Main {
                 File file = new File(frame.getPath());
                 BufferedImage img = ImageIO.read(file);
                 System.out.print("[sofvfx] Processing " + file.getName() + "\r");
-                EffectsProcessor.coloredFrames(img, 4, frameCount);
+
+                // effect layers
+                BufferedImage psImg = EffectsProcessor.pixelsort(img, 1);
+                BufferedImage textImg = EffectsProcessor.shadeAscii(psImg, 4, true, true);
+
+                ImageIO.write(textImg, "png", new File("./processed/" + ("00000".substring(0, (5 - Integer.toString(frameCount).length())) + frameCount) + ".png"));
                 frameCount++;
             }
         }

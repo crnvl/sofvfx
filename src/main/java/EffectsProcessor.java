@@ -1,14 +1,12 @@
 import org.apache.commons.lang3.StringUtils;
 
-import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
-import java.nio.Buffer;
 import java.util.ArrayList;
 
 public class EffectsProcessor {
+
     public static ArrayList<String> frameToText(BufferedImage img, int reduce) {
         String shades = StringUtils.reverse("Ñ#W$9876543210?abc+=-_  ");
 
@@ -30,21 +28,25 @@ public class EffectsProcessor {
         return lines;
     }
 
-    public static void coloredFrames(BufferedImage img, int reduce, int frameCount) throws IOException {
-        BufferedImage newImg = new BufferedImage(img.getWidth() * reduce, img.getHeight() * reduce, BufferedImage.TYPE_INT_RGB);
+    public static BufferedImage shadeAscii(BufferedImage img, int reduce, boolean withOrigin, boolean colored) throws IOException {
+        BufferedImage newImg = new BufferedImage(img.getWidth(), img.getHeight(), BufferedImage.TYPE_INT_RGB);
         Graphics g = newImg.getGraphics();
         String shades = StringUtils.reverse("Ñ#W$9876543210?abc+=-_ ");
         String colorShades = StringUtils.reverse("AB");
 
-        /*
-        for (int x = 0; x < img.getWidth(); x++) {
-            for (int y = 0; y < img.getHeight(); y++) {
-                g.setColor(new Color(img.getRGB(x, y)));
-                g.fillRect(x * reduce, y * reduce, reduce, reduce);
+        if (withOrigin) {
+            for (int x = 0; x < img.getWidth(); x += reduce) {
+                for (int y = 0; y < img.getHeight(); y += reduce) {
+                    g.setColor(new Color(img.getRGB(x, y)));
+                    g.fillRect(x, y, reduce + reduce, reduce + reduce);
+                }
             }
         }
-*/
-        g.setFont(new Font("Consolas", Font.BOLD, reduce * reduce * 2));
+//
+//        g.setColor(new Color(54, 57, 63));
+//        g.fillRect(0, 0, img.getWidth(), img.getHeight());
+
+        g.setFont(new Font("Consolas", Font.BOLD, reduce * 4));
         for (int x = 0; x < img.getWidth(); x += reduce * 2 * 1.4) {
             for (int y = 0; y < img.getHeight(); y += reduce * 2 * 1.5) {
                 int rgb = img.getRGB(x, y);
@@ -52,12 +54,60 @@ public class EffectsProcessor {
                 int green = (rgb & 0x0000ff00) >> 8;
                 int blue = rgb & 0x000000ff;
 
-                g.setColor(new Color(red, green, blue));
-                //g.setColor(fromShade(Character.toString(colorShades.toCharArray()[((red + green + blue) / 3) / colorShades.length() % colorShades.length()]), (red + green + blue) / 3));
-                g.drawString(Character.toString(shades.toCharArray()[((red + green + blue) / 3) % shades.length()]), x * reduce, y * reduce);
+                if(colored)
+                    g.setColor(new Color(red, green, blue));
+                else
+                    g.setColor(fromShade(Character.toString(colorShades.toCharArray()[((red + green + blue) / 3) / colorShades.length() % colorShades.length()]), (red + green + blue) / 3));
+                g.drawString(Character.toString(shades.toCharArray()[((red + green + blue) / 3) / shades.length() % shades.length()]), x + reduce, y + reduce);
             }
         }
-        ImageIO.write(newImg, "png", new File("./processed/" + ("00000".substring(0, (5 - Integer.toString(frameCount).length())) + frameCount) + ".png"));
+        return newImg;
+    }
+
+    public static BufferedImage pixelate(BufferedImage img, int reduce) throws IOException {
+        BufferedImage newImg = new BufferedImage(img.getWidth(), img.getHeight(), BufferedImage.TYPE_INT_RGB);
+        Graphics g = newImg.getGraphics();
+        String shades = StringUtils.reverse("Ñ#W$9876543210?abc+=-_ ");
+        String colorShades = StringUtils.reverse("AB");
+
+        for (int x = 0; x < img.getWidth(); x += reduce) {
+            for (int y = 0; y < img.getHeight(); y += reduce) {
+                g.setColor(new Color(img.getRGB(x, y)));
+                g.fillRect(x, y, reduce + reduce, reduce + reduce);
+            }
+        }
+        return newImg;
+    }
+
+    public static BufferedImage pixelsort(BufferedImage img, int reduce) throws IOException {
+        BufferedImage newImg = new BufferedImage(img.getWidth(), img.getHeight(), BufferedImage.TYPE_INT_RGB);
+        Graphics g = newImg.getGraphics();
+
+//        for (int x = 0; x < img.getWidth(); x += reduce) {
+//            for (int y = 0; y < img.getHeight(); y += reduce) {
+//                g.setColor(new Color(img.getRGB(x, y)));
+//                g.fillRect(x, y, reduce + reduce, reduce + reduce);
+//            }
+//        }
+
+        for (int y = 0; y < img.getHeight(); y++) {
+            int[] row = new int[img.getWidth()];
+            for (int x = 0; x < img.getWidth(); x++) {
+                row[x] = img.getRGB(x, y);
+            }
+            QuickSort.sort(row);
+
+            for (int x = 0; x < img.getWidth(); x++) {
+                int rgb = row[x];
+                int red = (rgb & 0x00ff0000) >> 16;
+                int green = (rgb & 0x0000ff00) >> 8;
+                int blue = rgb & 0x000000ff;
+
+                g.setColor(new Color(red, green, blue));
+                g.fillRect(x, y, reduce + reduce, reduce + reduce);
+            }
+        }
+        return newImg;
     }
 
     private static Color fromShade(String colorIndicator, int light) {

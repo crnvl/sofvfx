@@ -24,3 +24,9 @@ hs_err_pid*
 replay_pid*
 *.png
 *.gif
+input.mkv
+*.mp4
+*.mkv
+*.avi
+*.mp4
+*.exe
