@@ -59,6 +59,7 @@ public class VideoProcessor {
                 .setInput(in)
                 .addOutput(output)
                 .setVideoFrameRate(FFmpeg.FPS_23_976)
+                .setVideoBitRate(300000000)
                 .done();
 
         FFmpegJob job = executor.createJob(builder, new ProgressListener() {

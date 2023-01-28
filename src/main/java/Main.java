@@ -10,7 +10,7 @@ public class Main {
 
     public static void main(String[] args) throws IOException {
         VideoProcessor processor = new VideoProcessor("./ffmpeg/ffmpeg.exe", "./ffmpeg/ffprobe.exe");
-        processor.videoToFrames("./input.gif");
+        processor.videoToFrames("./input.mp4");
 
         System.out.print("[sofvfx] Processing frames...");
         File directory = new File("./frames/");
@@ -32,16 +32,17 @@ public class Main {
                 System.out.print("[sofvfx] Processing " + file.getName() + "\r");
 
                 // effect layers
-//                BufferedImage psImg = EffectsProcessor.pixelsort(img, 1);
-                BufferedImage textImg = EffectsProcessor.shadeAscii(img, 3, false, false);
+//                img = EffectsProcessor.pixelsort(img, 1);
+//                img = EffectsProcessor.shadeAscii(img, 6, false, true);
+//                img = EffectsProcessor.pixelate(img, 6);
 
-                ImageIO.write(textImg, "png", new File("./processed/" + ("00000".substring(0, (5 - Integer.toString(frameCount).length())) + frameCount) + ".png"));
+                ImageIO.write(img, "png", new File("./processed/" + ("00000".substring(0, (5 - Integer.toString(frameCount).length())) + frameCount) + ".png"));
                 frameCount++;
             }
         }
         System.out.print("[sofvfx] Finished processing frames.\r\n");
 
-        processor.framesToVideo("./output.gif");
+        processor.framesToVideo("./output.avi");
     }
 
     public static void textToImage(ArrayList<String> lines, int height, int width) throws IOException {
